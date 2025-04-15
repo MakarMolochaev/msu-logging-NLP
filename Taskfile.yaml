@@ -1,0 +1,9 @@
+version: "3"
+
+tasks:
+  protos:
+    cmds:
+    - python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. msu_logging.proto
+  run:
+    cmds:
+    - python main.py

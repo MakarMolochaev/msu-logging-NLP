@@ -1,0 +1,7 @@
+*.mp3
+*.wav
+__pycache__
+*.proto
+/nlp.py
+/nnlp.py
+token.txt
