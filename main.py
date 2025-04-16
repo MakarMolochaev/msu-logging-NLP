@@ -1,5 +1,6 @@
 import json
 from ollama import ChatResponse, chat
+import ollama
 import pika
 import grpc
 from concurrent import futures
@@ -8,6 +9,8 @@ import msu_logging_pb2_grpc
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import login
+
+client = 0
 
 def MakeProtocol(transcribed_text):
     prompt = (
@@ -32,7 +35,7 @@ def MakeProtocol(transcribed_text):
             f"Текст звонка:\n{transcribed_text}\n\n"
         )
 
-    response: ChatResponse = chat(model='gemma3:4b', messages=[
+    response: ChatResponse = client.chat(model='gemma3:4b', messages=[
       {
         'role': 'user',
         'content': prompt,
@@ -96,6 +99,7 @@ class RabbitMQConsumer:
 
 
 if __name__ == '__main__':
+    client = ollama.Client(host='http://localhost:11434')
     try:
         consumer = RabbitMQConsumer()
         consumer.start_consuming()
